@@ -19,8 +19,15 @@ class HomeTableViewController: UITableViewController {
         super.viewDidLoad()
         self.loadTweets()
         
-        myRefreshControl.addTarget(self, action: #selector(loadTweets), for: .valueChanged)
-        tableView.refreshControl = self.myRefreshControl
+        self.myRefreshControl.addTarget(self, action: #selector(loadTweets), for: .valueChanged)
+        self.tableView.refreshControl = self.myRefreshControl
+        self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.estimatedRowHeight = 150
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.loadTweets()
     }
     
     @objc func loadTweets() {
@@ -91,7 +98,10 @@ class HomeTableViewController: UITableViewController {
         if let imageData = data {
             cell.profileImageView.image = UIImage(data: imageData)
         }
-    
+        
+        cell.setFavorited(self.tweetArray[indexPath.row]["favorited"] as! Bool)
+        cell.setRetweeted(self.tweetArray[indexPath.row]["retweeted"] as! Bool)
+        cell.tweetId = self.tweetArray[indexPath.row]["id"] as! Int
         return cell
     }
     
